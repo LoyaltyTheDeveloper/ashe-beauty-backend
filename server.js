@@ -11,14 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedStates = ['Ekiti', 'Ondo'];
-
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+app.use("/uploads", express.static("public/uploads"));
 
 
 app.use(
