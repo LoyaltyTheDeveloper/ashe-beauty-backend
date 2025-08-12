@@ -11,9 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", express.static("public/uploads"));
+// app.use("/", express.static("public/uploads"));
 
-// app.use("/uploads", express.static(path.join("public/uploads")));
+app.use("/upload", express.static(path.join("public/upload")));
 
 
 app.use(
