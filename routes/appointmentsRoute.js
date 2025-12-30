@@ -8,7 +8,6 @@ const { getUserAppointments } = require("../controllers/appointmentController");
 
 router.post("/check-slot", auth, checkAvailability);
 router.post("/book", auth, bookAppointment);
-// router.get("/slots", getSlots);
 router.get("/user", auth, getUserAppointments);
 
 module.exports = router;
