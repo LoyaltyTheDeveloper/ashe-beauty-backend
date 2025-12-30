@@ -1,7 +1,6 @@
 const Appointment = require("../models/Appointment");
 const axios = require("axios");
 
-
 // exports.bookAppointment = async (req, res) => {
 //   try {
 //     const { reference, appointmentData } = req.body;
@@ -63,7 +62,7 @@ exports.checkAvailability = async (req, res) => {
     const exists = await Appointment.findOne({ date, time });
 
     if (exists) {
-      return res.status(409).json({ message: "Time slot already booked." });
+      return res.status(409).json({ message: "Time slot already booked. Please select another time." });
     }
 
     return res.status(200).json({ message: "Slot available." });
@@ -90,7 +89,7 @@ exports.bookAppointment = async (req, res) => {
     
     const existingAppointment = await Appointment.findOne({ date, time });
     if (existingAppointment) {
-      return res.status(400).json({ message: "This time slot is already booked." });
+      return res.status(409).json({ message: "This time slot is already booked." });
     }
 
    
@@ -150,36 +149,37 @@ exports.bookAppointment = async (req, res) => {
 };
 
 
-exports.getSlots = async (req, res) => {
-  const { date } = req.query;
+// exports.getSlots = async (req, res) => {
+//   const { date } = req.query;
 
-  if (!date) return res.status(400).json({ error: "Date is required" });
+//   if (!date) return res.status(400).json({ error: "Date is required" });
 
-  // const allSlots = ["9am", "12pm", "2pm", "5pm"];
+ 
+//    const allSlots = [
+//   { label: "7AM", value: "07:00" },
+//   { label: "9AM", value: "09:00" },
+//   { label: "11AM", value: "11:00" },
+//   { label: "1PM", value: "13:00" },
+//   { label: "3PM", value: "15:00" },
+//   { label: "5PM", value: "17:00" },
+//   { label: "7PM", value: "19:00" },
+//   { label: "9PM", value: "21:00" },
+// ];
 
-   const allSlots = [
-  { label: "7AM", value: "07:00" },
-  { label: "9AM", value: "09:00" },
-  { label: "11AM", value: "11:00" },
-  { label: "1PM", value: "13:00" },
-  { label: "3PM", value: "15:00" },
-  { label: "5PM", value: "17:00" },
-  { label: "7PM", value: "19:00" },
-  { label: "9PM", value: "21:00" },
-];
+//   const appointments = await Appointment.find({ date });
+//   const bookedCount = appointments.length;
+//   const totalSlots = 8;
 
-  const appointments = await Appointment.find({ date });
-  const bookedCount = appointments.length;
-  const totalSlots = 8;
+//   const bookedTimes = appointments.map((a) => a.time);
 
-  const bookedTimes = appointments.map((a) => a.time);
+//   const availableSlotTimes = allSlots?.label?.filter(slot => !bookedTimes.includes(slot));
 
-  const availableSlotTimes = allSlots?.label?.filter(slot => !bookedTimes.includes(slot));
+//   const availableSlotsCount = totalSlots - bookedCount;
 
-  const availableSlotsCount = totalSlots - bookedCount;
+//   res.status(200).json({ availableSlots: availableSlotsCount, availableSlotTimes });
+// };
 
-  res.status(200).json({ availableSlots: availableSlotsCount, availableSlotTimes });
-};
+
 
 exports.getUserAppointments = async (req, res) => {
   const  userId  = req.user._id;
