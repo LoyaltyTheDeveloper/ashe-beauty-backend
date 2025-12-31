@@ -185,9 +185,9 @@ exports.forgotPassword = async (req, res) => {
 
     // Nodemailer transporter
     const transporter = nodemailer.createTransport({
-      // host: "smtp.gmail.com",
-      // port: 587,
-      // secure: false,
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
@@ -341,9 +341,3 @@ exports.resetPassword = async (req, res) => {
 
   res.status(200).json({ message: "Your password has been reset successfully." });
 };
-
-console.log("ENV CHECK:", {
-  EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASS: process.env.EMAIL_PASS ? "SET" : "MISSING",
-  CLIENT_URL: process.env.CLIENT_URL,
-});
