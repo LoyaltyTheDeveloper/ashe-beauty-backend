@@ -193,6 +193,18 @@ exports.forgotPassword = async (req, res) => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
+
+    });
+
+    transporter.verify((err, success) => {
+      if (err) {
+        console.error("SMTP VERIFY ERROR:", err);
+      } else {
+        console.log("SMTP SERVER READY");
+      }
     });
 
     // Send email
@@ -292,7 +304,7 @@ exports.forgotPassword = async (req, res) => {
 
     res.status(200).json({ message: "The reset link has been sent to your email. Please check your spam folder if you don't see it in your inbox." });
   } catch (error) {
-    res.status(500).json({ message: "" });
+    res.status(500).json({ message: "An error occurred while sending the reset link." });
   }
 };
 
@@ -329,3 +341,9 @@ exports.resetPassword = async (req, res) => {
 
   res.status(200).json({ message: "Your password has been reset successfully." });
 };
+
+console.log("ENV CHECK:", {
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS ? "SET" : "MISSING",
+  CLIENT_URL: process.env.CLIENT_URL,
+});
