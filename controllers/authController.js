@@ -158,14 +158,17 @@ exports.resetPassword = async (req, res) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
 
-    if (!user) return res.status(400).json({ message: "Sorry. The link is invalid or has expired." });
+    if (!user) 
+      return res.status(400).json({ message: "Sorry. The link is invalid or has expired." });
 
-    user.password = password; // make sure you hash password in pre-save middleware
+    // Hash the new password before saving
+    user.password = await bcrypt.hash(password, 10);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
+
     await user.save();
 
-    res.status(200).json({ message: "Password reset successful" });
+    res.status(200).json({ message: "Password reset successful. Please login with your new password." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to reset password" });
