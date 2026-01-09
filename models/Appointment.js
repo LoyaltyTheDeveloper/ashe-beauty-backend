@@ -12,7 +12,7 @@ const appointmentSchema = new mongoose.Schema({
   lastname: { type: String, required: true },
   phone1: { type: String, required: true },
   phone2: { type: String, required: true},
-  address: { type: String },
+  address: { type: String, required: true},
   date: { type: String, required: true }, 
   time: { type: String, required: true }, 
   price: { type: Number, required: true },
