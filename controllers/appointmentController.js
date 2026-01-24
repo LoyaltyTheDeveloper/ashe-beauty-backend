@@ -1,5 +1,7 @@
 const Appointment = require("../models/Appointment");
 const axios = require("axios");
+const TimeSlot = require("../models/TimeSlot");
+
 
 // exports.bookAppointment = async (req, res) => {
 //   try {
@@ -54,16 +56,26 @@ const axios = require("axios");
 
 exports.checkAvailability = async (req, res) => {
   try {
-    const { date, time } = req.body;
+    const { date, time, timeId } = req.body;
+
+    const slot = await TimeSlot.findById(timeId);
+
+    if (slot.isActive === false) {
+      return res.status(400).json({ message: "This time slot is not available for booking." });
+    }
+    
     if (!date || !time) {
       return res.status(400).json({ message: "Missing date or time" });
     }
 
     const exists = await Appointment.findOne({ date, time });
+    
 
     if (exists) {
       return res.status(409).json({ message: "Time slot already booked. Please select another time." });
     }
+
+   
 
     return res.status(200).json({ message: "Slot available." });
   } catch (err) {
@@ -100,7 +112,7 @@ exports.bookAppointment = async (req, res) => {
       return res.status(409).json({ message: "This time slot is already booked." });
     }
 
-   
+    
     const paystackRes = await axios.get(
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
