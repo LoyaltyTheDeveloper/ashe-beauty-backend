@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/upload", express.static("public/upload"));
 
 const TimeSlot = require("./models/TimeSlot");
+// const Policy = require("./models/Policy");
 
 
 app.use(
@@ -35,6 +36,7 @@ app.use("/api/services", require("./routes/serviceRoute"));
 app.use("/api/slot", require("./routes/appointmentsRoute"));
 app.use("/api/timeslots", require("./routes/timeSlotRoute"));
 app.use("/api/appointments", require("./routes/appointmentsRoute"));
+app.use("/api/policies", require("./routes/policyRoute"));
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -45,7 +47,44 @@ mongoose
   })
   .catch((err) => console.log("DB Error:", err));
 
+// const policies = [
+//   {
+//     title: "Booking Fee",
+//     description:
+//       "A non-refundable ₦5,000 fee is required to secure your date. No booking fee = No reservation."
+//   },
+//   {
+//     title: "Rescheduling",
+//     description:
+//       "Rescheduling can be done 48 hours before your appointment."
+//   },
+//   {
+//     title: "Travel Glam",
+//     description:
+//       "Home service outside Akure attracts a location-based travel fee. You can contact us via WhatsApp on 07061501897 for further information."
+//   },
+//   {
+//     title: "Late Policy",
+//     description:
+//       "10–15 minutes grace. After that, an additional fee or cancellation may apply."
+//   }
+// ];
 
+
+// const seedPolicies = async () => {
+//   try {
+//     await Policy.deleteMany(); // optional
+//     await Policy.insertMany(policies);
+
+//     console.log("Policies inserted successfully");
+//     process.exit();
+//   } catch (error) {
+//     console.error(error);
+//     process.exit(1);
+//   }
+// };
+
+// seedPolicies();
 
 
 //   async function seedTimeSlots() {
