@@ -7,7 +7,7 @@ exports.addService = async (req, res) => {
 
 try {
     const { name, price, description } = req.body;
-    const image = req.file?.filename;
+    const image = req.file?.path;
 
 
     if (!name || !image || !price || !description) {
@@ -18,7 +18,7 @@ try {
       name,
       price,
       description,
-      image: `/upload/${image}`, 
+      image, 
     });
 
     await service.save();
@@ -44,35 +44,38 @@ exports.editService = async (req, res) => {
     const { name, price, description } = req.body;
 
     const service = await Service.findById(id);
-    if (!service) return res.status(404).json({ message: "Service not found" });
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
 
+    // Update text fields
     if (name) service.name = name;
     if (price) service.price = price;
     if (description) service.description = description;
 
-   if (req.file && service.image) {
-  // delete old image
-  const oldImagePath = path.join(
-    __dirname,
-    "../public",
-    service.image.replace(/^\/+/, "")
-  );
+    // If new image is uploaded
+    if (req.file) {
+      // 1️⃣ Delete old image from Cloudinary
+      if (service.imagePublicId) {
+        await cloudinary.uploader.destroy(service.imagePublicId);
+      }
 
-  if (fs.existsSync(oldImagePath)) {
-    fs.unlinkSync(oldImagePath);
-  }
-
-  // set new image
-  service.image = "/upload/" + req.file.filename;
-}
-
+      // 2️⃣ Save new image
+      service.image = req.file.path;
+      service.imagePublicId = req.file.filename;
+    }
 
     await service.save();
 
-    res.status(200).json({ message: "Service updated successfully", service });
+    res.status(200).json({
+      message: "Service updated successfully",
+      service,
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to update service" });
+    res.status(500).json({
+      message: "Failed to update service",
+    });
   }
 };
 
@@ -80,31 +83,27 @@ exports.deleteService = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1️⃣ Find service first
+    // 1️⃣ Find service
     const service = await Service.findById(id);
     if (!service) {
       return res.status(404).json({ message: "Service not found" });
     }
 
-    // 2️⃣ Delete image if it exists
-    if (service.image) {
-      const imagePath = path.join(
-        __dirname,
-        "../public",
-        service.image
-      );
-
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
+    // 2️⃣ Delete image from Cloudinary
+    if (service.imagePublicId) {
+      await cloudinary.uploader.destroy(service.imagePublicId);
     }
 
-    // 3️⃣ Delete service from DB
+    // 3️⃣ Delete from DB
     await Service.findByIdAndDelete(id);
 
-    res.status(200).json({ message: "Service deleted successfully" });
+    res.status(200).json({
+      message: "Service deleted successfully",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to delete service" });
+    res.status(500).json({
+      message: "Failed to delete service",
+    });
   }
 };
