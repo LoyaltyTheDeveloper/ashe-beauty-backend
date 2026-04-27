@@ -8,6 +8,7 @@ exports.addService = async (req, res) => {
 try {
     const { name, price, description } = req.body;
     const image = req.file?.path;
+    const imagePublicId = req.file?.filename;
 
 
     if (!name || !image || !price || !description) {
@@ -18,7 +19,8 @@ try {
       name,
       price,
       description,
-      image, 
+      image,
+      imagePublicId,
     });
 
     await service.save();
