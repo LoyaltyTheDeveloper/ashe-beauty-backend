@@ -1,14 +1,14 @@
 const Service = require('../models/Service');
 const upload = require('../middleware/upload');
-const fs = require("fs");
-const path = require("path");
+// const fs = require("fs");
+// const path = require("path");
 
 exports.addService = async (req, res) => {
 
 try {
     const { name, price, description } = req.body;
     const image = req.file?.path;
-    const imagePublicId = req.file?.filename;
+    const imagePublicId = req.file?.filename || req.file?.public_id;
 
 
     if (!name || !image || !price || !description) {

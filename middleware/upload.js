@@ -1,19 +1,16 @@
-const path = require("path");
-// const fs = require("fs");
-
-// const uploadDir = path.join(__dirname, "../public/upload");
-
-
-
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: "ashe_beauty_services", // Cloudinary folder
-    allowed_formats: ["jpg", "png", "jpeg", "svg"],
+  params: async (req, file) => {
+    return {
+      folder: "ashe_beauty_services",
+      resource_type: "image",
+      format: file.mimetype.split("/")[1], // auto-detect extension
+      public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
+    };
   },
 });
 
