@@ -10,6 +10,9 @@ try {
     const image = req.file?.path;
     const imagePublicId = req.file?.filename || req.file?.public_id;
 
+    console.log(req.file);
+console.log(req.body);
+
 
     if (!name || !image || !price || !description) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -30,6 +33,8 @@ try {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+
 
 exports.getServices = async (req, res) => {
     try {

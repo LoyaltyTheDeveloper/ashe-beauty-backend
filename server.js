@@ -22,7 +22,7 @@ const TimeSlot = require("./models/TimeSlot");
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://ashe-beauty.vercel.app"],
+    origin: ["http://localhost:5173", "https://ashe-beauty.vercel.app", "http://localhost:8081"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -37,6 +37,18 @@ app.use("/api/slot", require("./routes/appointmentsRoute"));
 app.use("/api/timeslots", require("./routes/timeSlotRoute"));
 app.use("/api/appointments", require("./routes/appointmentsRoute"));
 app.use("/api/policies", require("./routes/policyRoute"));
+
+
+// ✅ GLOBAL ERROR HANDLER
+app.use((err, req, res, next) => {
+  console.error("🔥 GLOBAL ERROR:", err);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || "Something went wrong",
+  });
+});
+
 
 mongoose
   .connect(process.env.MONGO_URI)
