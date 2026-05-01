@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // app.use("/", express.static("public/uploads"));
 
-// app.use("/upload", express.static(path.join("public/upload")));
+
 app.use("/upload", express.static("public/upload"));
 
 const TimeSlot = require("./models/TimeSlot");
