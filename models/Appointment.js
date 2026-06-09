@@ -10,6 +10,7 @@ const appointmentSchema = new mongoose.Schema({
   ],
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
+  useremail: { type: String, required: true },
   phone1: { type: String, required: true },
   phone2: { type: String, required: true},
   address: { type: String, required: true},

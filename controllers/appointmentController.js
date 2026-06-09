@@ -88,7 +88,7 @@ exports.bookAppointment = async (req, res) => {
   try {
 
     const { reference, appointmentData } = req.body;
-    const userId = req.user.id;
+    // const userId = req.user.id;
 
     if (!reference || !appointmentData) {
       return res
@@ -96,7 +96,7 @@ exports.bookAppointment = async (req, res) => {
         .json({ message: "Missing payment reference or appointment data" });
     }
 
-    const { service, firstname, lastname, phone1, phone2, address, date, time, price } = appointmentData;
+    const { service, firstname, lastname, useremail, phone1, phone2, address, date, time, price } = appointmentData;
 
      const normalizedDate = new Date(date).toISOString().split("T")[0];
 
@@ -144,10 +144,11 @@ exports.bookAppointment = async (req, res) => {
 
    
     const newAppointment = new Appointment({
-      user: userId,
+      // user: userId,
       service,
       firstname,
       lastname,
+      useremail,
       phone1,
       phone2,
       address,
@@ -322,17 +323,17 @@ exports.deleteAdminAppointment = async (req, res) => {
 
 
 
-exports.getUserAppointments = async (req, res) => {
-  const  userId  = req.user.id;
+// exports.getUserAppointments = async (req, res) => {
+//   const  userId  = req.user.id;
 
-  try {
-    const appointments = await Appointment.find({ user: userId }).sort({ createdAt: -1 });
+//   try {
+//     const appointments = await Appointment.find({ user: userId }).sort({ createdAt: -1 });
 
-    res.status(200).json(appointments);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch appointments" });
-  }
-};
+//     res.status(200).json(appointments);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to fetch appointments" });
+//   }
+// };
 
 
 exports.getAllClientAppointments = async (req, res) => {

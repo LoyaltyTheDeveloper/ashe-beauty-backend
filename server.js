@@ -7,7 +7,6 @@ const fs = require("fs");
 
 const app = express();
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -19,6 +18,10 @@ app.use("/upload", express.static("public/upload"));
 const TimeSlot = require("./models/TimeSlot");
 // const Policy = require("./models/Policy");
 
+const { apiLimiter } = require("./middleware/rateLimiter");
+
+app.set("trust proxy", 1);
+
 
 app.use(
   cors({
@@ -29,8 +32,10 @@ app.use(
   })
 );
 
+// api rate limiter
+// app.use("/api", apiLimiter);
 
-app.use("/api/auth", require("./routes/authRoute"));
+// app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/appointments", require("./routes/appointmentsRoute"));
 app.use("/api/services", require("./routes/serviceRoute"));
 app.use("/api/slot", require("./routes/appointmentsRoute"));
